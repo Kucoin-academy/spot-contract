@@ -10,7 +10,7 @@ To some extent, the contact price reflects to the market's expectations of the u
 
 e.g.: let's see how it works, **if the trading fee is for free**
 
-![KLINE](KLINE.jpg)
+![kline](kline.jpg) 
 
 On May 1, the price of BTC future is 9925 USD while the price of BTC is 9345 USD, the basis is 580 USD.
 
