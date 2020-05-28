@@ -1,5 +1,13 @@
 # 期现套利策略
 
+[![Logo](https://img.shields.io/badge/KuCoin-KuMex-yellowgreen?style=flat-square)](https://github.com/Kucoin-academy/Guide)
+[![GitHub stars](https://img.shields.io/github/stars/Kucoin-academy/spot-contract.svg?label=Stars&style=flat-square)](https://github.com/Kucoin-academy/spot-contract)
+[![GitHub forks](https://img.shields.io/github/forks/Kucoin-academy/spot-contract.svg?label=Fork&style=flat-square)](https://github.com/Kucoin-academy/spot-contract)
+[![GitHub issues](https://img.shields.io/github/issues/Kucoin-academy/spot-contract.svg?label=Issue&style=flat-square)](https://github.com/Kucoin-academy/spot-contract/issues)
+
+[![](https://img.shields.io/badge/lang-English-informational.svg?longCache=true&style=flat-square)](README_EN.md)
+[![](https://img.shields.io/badge/lang-Chinese-red.svg?longCache=true&style=flat-square)](README_CN.md)
+
 ## 策略说明
 
 期现套利是指利用期货市场和现货市场之间的差价，**在价格低的市场买入或做多，同时在价格高的市场卖出或者做空**，**等到差价消失时平仓从而获利的行为**。
@@ -10,7 +18,7 @@
 
 举个例子，我们来看看具体怎么操作，**假设我们现在零手续费**：
 
-![KLINE_CN](KLINE_CN.jpg)
+![KLINE_CN](./img/KLINE_CN.jpg)
 
 5月1日比特币期货价格为9925美元/枚，现货价格为9345美元/枚，基差为580美元/枚。
 

@@ -1,54 +1,63 @@
-# Spot_contract_ arbitrage
+# 期现套利策略
 
-## Strategy description
+[![Logo](https://img.shields.io/badge/KuCoin-KuMex-yellowgreen?style=flat-square)](https://github.com/Kucoin-academy/Guide)
+[![GitHub stars](https://img.shields.io/github/stars/Kucoin-academy/spot-contract.svg?label=Stars&style=flat-square)](https://github.com/Kucoin-academy/spot-contract)
+[![GitHub forks](https://img.shields.io/github/forks/Kucoin-academy/spot-contract.svg?label=Fork&style=flat-square)](https://github.com/Kucoin-academy/spot-contract)
+[![GitHub issues](https://img.shields.io/github/issues/Kucoin-academy/spot-contract.svg?label=Issue&style=flat-square)](https://github.com/Kucoin-academy/spot-contract/issues)
 
-Spot-contract arbitrave refres to the profitable strategy applies to the price spread between the futures market and spot market: **long in lower price market while short in the higher price market until the price spread disappears to close the positions**.  
+[![](https://img.shields.io/badge/lang-English-informational.svg?longCache=true&style=flat-square)](README_EN.md)
+[![](https://img.shields.io/badge/lang-Chinese-red.svg?longCache=true&style=flat-square)](README_CN.md)
 
-Because the future contract settlement system, the prices of the same digital currency is closely connected in the spot market and the futures market, the the futures price will converge with the spot price at latest of the contract expiration date. So you could operate riskless arbitrage when the price spread shows up.  
+## 策略说明
 
-To some extent, the contact price reflects to the market's expectations of the underlying assets. In the wild fluctuation, the price spread between futures market and spot market will rise up to result a basis. The nuclear logic of this strategy is that the basis of the futures and spot must retrace: the future price  will converge the spot price at latest of the contract expiration date, on the other hand, the basis will trace to the normal levels while the market fluctuations reduction.  
+期现套利是指利用期货市场和现货市场之间的差价，**在价格低的市场买入或做多，同时在价格高的市场卖出或者做空**，**等到差价消失时平仓从而获利的行为**。
 
-e.g.: let's see how it works, **if the trading fee is for free**
+由于期货合约交割机制的存在，同一数字货币的价格在现货市场和期货市场紧密相连，期货价格最迟在合约到期日会和现货价格趋同，所以当期货合约和现货之间存在价差的时候，就可以进行无风险套利。
 
-![kline](kline.jpg) 
+合约价格一定程度反映市场对于标的未来价格的预期。当出现剧烈行情时，合约价格将会与现货价格出现较大偏离，产生基差。本策略的核心逻辑为现货与合约之间基差的回归存在套利机会。合约价格在临近交割会趋近于现货价格；另一方面，基差也可能在市场波动率减小的过程中恢复到正常水平。
 
-On May 1, the price of BTC future is 9925 USD while the price of BTC is 9345 USD, the basis is 580 USD.
+举个例子，我们来看看具体怎么操作，**假设我们现在零手续费**：
 
-On May 15, the price of BTC future is 8590 USD while the price of BTC is 8410 USD, the basis drops down to 180 USD.  
+![KLINE_CN](./img/KLINE_CN.jpg)
 
-If we short the BTC future valued as 1 BTC at 9925 USD, and we buy 1 BTC at 9345 USDT at the same time on May 1.  
+5月1日比特币期货价格为9925美元/枚，现货价格为9345美元/枚，基差为580美元/枚。
 
-On May 15, close the future position and sell 1 BTC at 8410 USD.  
+至5月15日，比特币期货价格为8590美元/枚，当日现货价格为8410美元/枚，基差缩小到180美元/枚。
 
-Then this spot contract arbitrage profit is 400 USD = 580 USD - 180 USD.
+如在5月1日，以9925美元/枚的价格卖出开空价值1枚比特币期货的合约，同时以9345美元/枚的价格买入一枚比特币现货。
 
-We could say that the strategy is **"buying in the spot market, and closeing the contracts in future market"**, the unit profit obtained by investors is the price spread of futures price and the spot pricee at the same time minus the holding cost and settlement cost.  
+在5月15日时，对期货进行平仓，同时以8410美元/枚的价格卖出比特币。
 
-Besides, we could make the strategy **"higher frequency"**, because if we always wait for the settlement of futures to close the positionsand get the profit, we have few numbers of trades, then the overall profit would be relatively low.  
+此次期现套利组合盈利就是580-180=400，也就是每手期货保守盈利400点，折算成现货每枚比特币增加盈利400美元。  
 
-**Through the monitoring of spot and futures prices, we could find that these two price curves intresect each other sometimes, so we only need to open the position when there is a price spread, and then close thee position when the price is equal to make a profit. When the pricee spread occurs again, we could open the position again. Continuously, there is no need to wait for settlement of futures, then the frequency of trades could be greatly increased, thereby increasing the overall profit**.  
+策略相当于“**在现货市场进货，在期货市场交割卖出**”，投资者所获得的单位利润为，当时期货价格与现货价格的价差减去持有成本和交割成本。
 
-**Spot-contract arbitrage includes positive basis arbitrage and reverse basis arbitrage**:
+此外，我们可以将策略**高频化**，因为如果我们在期现套利时始终等到交割时才进行平仓获利，我们的交易次数会很少，整体的收益会比较偏低。
 
-That is to say, when the spot price is underestimated and the futures contract price is overestimated, you can sell to short the futures contract while buying to long the same amount of spot to establish an arbitrage position. When the price spread of spot and futures becomes normal, close the futures contracts and sell the spot at the same time to obtain profits from it. This is positive basis arbitrage.
+**通过对现货和期货价格的监控，我们可以发现两者价格曲线时互相交错的，所以我们只需要在有价差时建仓，在价格相等时平仓从而获利，等到再次出现价差时再次建仓，不断循环，不需要等到交割时再平仓，这样就可以大大提高交易频率，从而提高整体收益**。
 
-Conversely, when the spot price is overestimated and the futures contract price is underestimated, investors could buy to long the futures contract and sell the same amount of spot at the smae time to establish an arbitrage position. When the price spread of spot and futures becomes normal, we need to close the positions at the same time to get profits. This is reverse basis arbitrage. 
+**期现套利主要包括正向基差套利和反向基差套利**。
 
-**Spot-contract arbitrage has a very important effect on the futures market**:  
+也就是说当现货价格被低估，期货合约价格被高估时，你可以卖出该期货合约，同时买入同等数量的现货，建立套利头寸。当现货和期货价格差距趋于正常时，将期货合约平仓，同时卖出对应现货，从中获得利润。
 
-1. Because of spot-contract arbitrage, futures prices will not be outrageous and deviate from the spot prices, and it also make the price of digital cureencies more reasonable and more responsive to market trends.  
-2. Arbitrage operations helps to improve marekt liquidity, and is more conductive to the smooth progress of invesment trades and hedging operations.  
+相反，当现货价格被高估，期货合约价格被低估时，投资者可以买入该期货合约，同时卖出同等数量现货，建立套利头寸。当现货和期货价格趋于正常时，同时平仓，获利了结，这是反向基差套利。
 
-Bitcoin spot prices fluctuate up and down, and the basis for futures ofthen deviates significantly. If you can control the spot-contract arbitrage  well and seize the opprtunities, you can definitely gain considerable profits.
+**期现套利对期货市场有非常重要的作用**：
 
-**However, during the actual operations, the trading fee cannot be ignored, and the number of contracts to be opened may not be exactly and integer**. Therefore, due to these possible error, the profit of spot-contract arbitrage could produce some fluctuations. When the price fluctuates sharply, the fluctuation of income would be relatively large.  
+1. 正因为期货与现货之间可以套利，期货的价格才不会脱离现货价格而出现离谱的价格，使得数字货币的价格更合理，更能反应市场的走势。
+2. 套利行为有助于市场流动性的提高，更有利于投资者交易和套期保值操作的顺利进行。
 
-**Moreover, KuCoin provides the transaction data of level 3, great matching engine, and the commission discount specially offers to the API customers, which could greatly reduce the disadvantages of the trading operations. At the same time, we offer the sandbox environment as the data testing support to avoid the risks.**
+比特币现货价格跌宕起伏，与期货间的基差经常出现较大偏离。如果你能掌握期现套利的方法，抓住这些机会，那一定可以收获可观的利润。
 
-**Only a simple and incomplete trading strategy is provided here, so please pay attention to avoiding risks when using it. Of course, we do not want you to suffer more losses, so please do not directly run it in the actual environment before you have tested it yourself. We do not want you to become a philanthropist! ! !**
+**但是，在实操过程中，手续费是不可忽视的，而且需要开的合约张数也未必刚好是整数**。因此，由于这些误差，期现套利的收益会产生一些波动。在价格急剧波动的时候，收益波动也会比较大。
 
-**If you want to use the strategy in the actual environment to earn stable profits, we hope that you can make test adjustments in the sandbox environment with other parameters or strategies to enable you to achieve your goals. We also look forward to sharing your test data and Insights.**
+**此外，KuCoin拥有level3级别的交易数据、极优的撮合引擎，以及对api用户提供特别的手续费折扣，极大程度的减少了你在策略实施时的劣势，同时提供sandbox环境作为数据测试支撑，帮助你规避风险。**  
 
-**Surely, if you encounter any problems in this process, or you have a profitable strategy to share, please reflect in ISSUE, we will try to respond in a timely manner.**
+**这里仅提供一个简单且不完备的交易策略，所以在使用时请注意规避风险，当然，我们不希望你出现较多的亏损，所以在未经自己亲手测试之前，请千万不要直接在实际环境使用，我们也不想你成为一个慈善家！！！**
 
-**If you are interested in this strategy, please click the star in the upper right corner, we will  measure the popularity of this strategy and subsequent optimization priorities based on the amounts of stars. You can also click watching in the upper right corner to continue to follow this project by receiving update notifications**.  
+**如果你想在实际环境中利用策略获得稳定的盈利，我们希望你能够在sandbox环境配合其他参数或是策略进行测试调整，以使你能够达到目的，我们也非常期待你能分享你的测试数据以及独到的见解。**
+
+**当然，如果这个过程中，你遇到任何问题需要帮助亦或是有赚钱的策略想要分享，请在ISSUE中反映，我们会努力及时响应。**
+
+**如果你对该策略有兴趣，请点击右上角star，我们会根据star个数来衡量策略的受欢迎程度和后续优化优先级，你也可以点击右上角watching通过接收更新通知来持续关注该项目**。
+
